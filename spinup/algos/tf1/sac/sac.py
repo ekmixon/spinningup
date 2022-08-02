@@ -160,7 +160,7 @@ def sac(env_fn, actor_critic=core.mlp_actor_critic, ac_kwargs=dict(), seed=0,
 
         # get actions and log probs of actions for next states, for Q-learning
         _, pi_next, logp_pi_next, _, _ = actor_critic(x2_ph, a_ph, **ac_kwargs)
-    
+
     # Target value network
     with tf.variable_scope('target'):
         # target q values, using actions from *current* policy
@@ -244,11 +244,7 @@ def sac(env_fn, actor_critic=core.mlp_actor_critic, ac_kwargs=dict(), seed=0,
         # Until start_steps have elapsed, randomly sample actions
         # from a uniform distribution for better exploration. Afterwards, 
         # use the learned policy.
-        if t > start_steps:
-            a = get_action(o)
-        else:
-            a = env.action_space.sample()
-
+        a = get_action(o) if t > start_steps else env.action_space.sample()
         # Step the env
         o2, r, d, _ = env.step(a)
         ep_ret += r

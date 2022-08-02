@@ -166,7 +166,7 @@ def td3(env_fn, actor_critic=core.MLPActorCritic, ac_kwargs=dict(), seed=0,
     # Freeze target networks with respect to optimizers (only update via polyak averaging)
     for p in ac_targ.parameters():
         p.requires_grad = False
-        
+
     # List of parameters for both Q-networks (save this for convenience)
     q_params = itertools.chain(ac.q1.parameters(), ac.q2.parameters())
 
@@ -285,15 +285,11 @@ def td3(env_fn, actor_critic=core.MLPActorCritic, ac_kwargs=dict(), seed=0,
 
     # Main loop: collect experience in env and update/log each epoch
     for t in range(total_steps):
-        
+
         # Until start_steps have elapsed, randomly sample actions
         # from a uniform distribution for better exploration. Afterwards, 
-        # use the learned policy (with some noise, via act_noise). 
-        if t > start_steps:
-            a = get_action(o, act_noise)
-        else:
-            a = env.action_space.sample()
-
+        # use the learned policy (with some noise, via act_noise).
+        a = get_action(o, act_noise) if t > start_steps else env.action_space.sample()
         # Step the env
         o2, r, d, _ = env.step(a)
         ep_ret += r

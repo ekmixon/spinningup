@@ -148,7 +148,7 @@ def ddpg(env_fn, actor_critic=core.mlp_actor_critic, ac_kwargs=dict(), seed=0,
     # Main outputs from computation graph
     with tf.variable_scope('main'):
         pi, q, q_pi = actor_critic(x_ph, a_ph, **ac_kwargs)
-    
+
     # Target networks
     with tf.variable_scope('target'):
         # Note that the action placeholder going to actor_critic here is 
@@ -215,12 +215,8 @@ def ddpg(env_fn, actor_critic=core.mlp_actor_critic, ac_kwargs=dict(), seed=0,
 
         # Until start_steps have elapsed, randomly sample actions
         # from a uniform distribution for better exploration. Afterwards, 
-        # use the learned policy (with some noise, via act_noise). 
-        if t > start_steps:
-            a = get_action(o, act_noise)
-        else:
-            a = env.action_space.sample()
-
+        # use the learned policy (with some noise, via act_noise).
+        a = get_action(o, act_noise) if t > start_steps else env.action_space.sample()
         # Step the env
         o2, r, d, _ = env.step(a)
         ep_ret += r

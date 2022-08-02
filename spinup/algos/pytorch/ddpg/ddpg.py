@@ -245,15 +245,11 @@ def ddpg(env_fn, actor_critic=core.MLPActorCritic, ac_kwargs=dict(), seed=0,
 
     # Main loop: collect experience in env and update/log each epoch
     for t in range(total_steps):
-        
+
         # Until start_steps have elapsed, randomly sample actions
         # from a uniform distribution for better exploration. Afterwards, 
-        # use the learned policy (with some noise, via act_noise). 
-        if t > start_steps:
-            a = get_action(o, act_noise)
-        else:
-            a = env.action_space.sample()
-
+        # use the learned policy (with some noise, via act_noise).
+        a = get_action(o, act_noise) if t > start_steps else env.action_space.sample()
         # Step the env
         o2, r, d, _ = env.step(a)
         ep_ret += r

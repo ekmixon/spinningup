@@ -306,7 +306,7 @@ def ppo(env_fn, actor_critic=core.MLPActorCritic, ac_kwargs=dict(), seed=0,
             # save and log
             buf.store(o, a, r, v, logp)
             logger.store(VVals=v)
-            
+
             # Update obs (critical!)
             o = next_o
 
